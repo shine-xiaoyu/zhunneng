@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xqy.dao.PlanDao">
+
+	<select id="findAll" resultType="Plan">
+		SELECT p.*,d.name as dname from plan p LEFT JOIN dept d on p.dept_id = d.id 
+		<where>
+			<if test="name!=null and name!='' ">
+				p.name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectOne" resultType="Plan">
+		SELECT p.*,d.name as dname from plan p LEFT JOIN dept d on p.dept_id = d.id
+		where p.id = #{id}
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT into plan VALUE(null,#{name},#{amount},#{manager},#{content},#{dept_id},#{pic})
+	</insert>
+	
+	<delete id="deleteAll" parameterType="String">
+		DELETE FROM plan where id in (${value})
+	</delete>
+	
+	
+	<select id="findAllDept" resultType="dept">
+		select * from dept
+	</select>
+	
+	
+	<update id="update">
+	
+		update plan
+		<trim prefix="set" suffix="where id = #{id}" suffixOverrides=",">
+			<if test="name !=null and name!='' ">
+				name = #{name},
+			</if>
+			<if test="amount!= null and amount !=0.0">
+				amount = #{amount},
+			</if>
+			<if test="manager!= null and manager !=''">
+				manager = #{manager},
+			</if>
+			<if test="content!=null and content!=''">
+				content = #{content},
+			</if>
+			<if test="dept_id!=null and dept_id!=0">
+				dept_id = #{dept_id},
+			</if>
+		</trim>
+		
+	</update>
+	
+	
+</mapper>
